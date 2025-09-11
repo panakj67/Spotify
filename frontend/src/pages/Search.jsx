@@ -95,13 +95,6 @@ const Search = () => {
           return;
         }
 
-        // Don't try fallback for 401, just show login message
-        if (err.response?.status === 401) {
-          setError('Please login to access more features');
-          setIsLoading(false);
-          return;
-        }
-
         // For other errors, try fallback search
         try {
           const filteredSongs = await fetchAndFilterSongs(searchQuery);

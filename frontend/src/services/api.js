@@ -10,7 +10,8 @@ export const API_ENDPOINTS = {
 // Default API config
 export const apiConfig = {
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  withCredentials: true,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

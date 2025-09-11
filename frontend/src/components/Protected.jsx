@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import api from '../services/api'
 
 const Protected = ({ children }) => {
     const navigate = useNavigate();
@@ -9,9 +9,7 @@ const Protected = ({ children }) => {
     const { isDarkMode } = useTheme();
 
     useEffect(() => {
-        axios.get('https://song-steam-backend.onrender.com/auth/me', {
-            withCredentials: true
-        })
+        api.get('/auth/me')
         .then(response => {
             setIsLoading(false);
         })

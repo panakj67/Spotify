@@ -49,7 +49,7 @@ export async function getSongs(req, res) {
 // Get a song by ID
 export async function getSongById(req, res) {
   try {
-    const songId = req.params.mama
+    const songId = req.params.id;
 
     const song = await songModel.findById(songId)
 
@@ -70,30 +70,17 @@ export async function getSongById(req, res) {
 export const searchSong = async (req, res) => {
   try {
     const query = req.query.text || '';
-    
-    // Simple validation
-    if (!query) {
-      return res.status(200).json({ songs: [] });
-    }
 
-    // Basic search without regex
     const songs = await songModel.find({
       $or: [
         { title: { $regex: query, $options: 'i' } },
         { artist: { $regex: query, $options: 'i' } }
       ]
-    })
-    .select('_id title artist audio poster')
-    .limit(20)
-    .lean();
-
-    return res.status(200).json({ songs });
-    
-  } catch (error) {
-    console.error('Search error:', error);
-    return res.status(500).json({ 
-      message: 'Search failed',
-      error: error.message 
     });
+
+    res.status(200).json({ songs });
+  } catch (error) {
+    console.error('Error in searchSong:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };

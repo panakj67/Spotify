@@ -6,12 +6,26 @@ import cors from 'cors';
 
 const app = express();
 
-// ✅ CORS middleware with simplified configuration
-app.use(cors({
-  origin: '*',  // Allow all origins temporarily to debug
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// ✅ Whitelisted frontend domains
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://song-steam-frontend.onrender.com'
+];
+
+// ✅ CORS middleware
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`❌ Blocked CORS request from: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
+  })
+);
 
 // ✅ Middlewares
 app.use(express.json());

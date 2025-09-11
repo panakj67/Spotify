@@ -14,46 +14,31 @@ const router = express.Router();
 
 
 
-router.use((req, res, next) => {
-    // Check for token in cookies first
-    let token = req.cookies.token;
+router.use((req,res,next)=>{
+    const token = req.cookies.token
+
+    if(!token){
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+
+    try{
+        const decoded = jwt.verify(token,process.env.JWT_SECRET)
+        next()
+    }catch(err){
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
     
-    // If no token in cookies, check Authorization header
-    if (!token && req.headers.authorization) {
-        const authHeader = req.headers.authorization;
-        if (authHeader.startsWith('Bearer ')) {
-            token = authHeader.substring(7);
-        }
-    }
-
-    // For search endpoint, allow without authentication
-    if (req.path === '/search-songs') {
-        return next();
-    }
-
-    if (!token) {
-        return res.status(401).json({
-            message: "Unauthorized - No token provided"
-        });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // Attach user info to request
-        next();
-    } catch (err) {
-        return res.status(401).json({
-            message: "Unauthorized - Invalid token",
-            error: process.env.NODE_ENV === 'development' ? err.message : undefined
-        });
-    }
 })
 
 router.post('/upload', uploadMiddleware.single("chacha") ,upload)
 
 router.get('/get-songs',getSongs)
 
-router.get('/get-song/:mama',getSongById)
+router.get('/get-song/:id', getSongById);
 
 router.get('/search-songs',searchSong)
 

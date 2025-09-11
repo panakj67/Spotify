@@ -16,10 +16,10 @@ const AppRoutes = () => {
                 {/* Public Routes */}
                 <Route path='/register' element={<Register />} />
                 <Route path='/login' element={<Login />} />
-                <Route path='/search' element={<Search />} />
 
                 {/* Protected Routes */}
                 <Route path="/" element={<Protected><Home /></Protected>} />
+                <Route path='/search' element={<Search />} />
                 <Route path="/upload" element={<Protected><Upload /></Protected>} />
                 <Route path="/profile" element={<Protected><Profile /></Protected>} />
             </Routes>
