@@ -21,11 +21,10 @@ export async function registerUser(req, res) {
   const { username, password } = req.body;
   console.log(username);
   
-
   try {
     const existingUser = await userModel.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ success : true, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -92,15 +91,15 @@ export async function me(req, res) {
   const token = req.cookies.token;
   
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
+    return res.status(401).json({ message: "Unauthorized: No token provided", user });
+  } 
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await userModel.findById(decoded.id).select("-password");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found", user });
     }
 
     res.status(200).json({
@@ -111,3 +110,17 @@ export async function me(req, res) {
     res.status(401).json({ message: "Unauthorized: Invalid token", error: err.message });
   }
 }
+
+// ================== Logout ==================
+export async function logoutUser(req, res) {
+  try {
+    res.clearCookie("token", COOKIE_OPTIONS); // clear JWT cookie
+
+    res.status(200).json({
+      message: "Logout successful"
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+}
+

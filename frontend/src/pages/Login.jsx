@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
+import { useDispatch } from 'react-redux';
+import { setIsAutherised, setLoading, setUser } from '../store/features/userSlice'; 
+
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,6 +17,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    dispatch(setLoading(true));
 
     try {
       const response = await axios.post(
@@ -20,11 +25,16 @@ const Login = () => {
         { username, password },
         { withCredentials: true }
       );
+      
+      dispatch(setUser(response.data.user));
+      dispatch(setIsAutherised(true));
       console.log('Login Success:', response.data);
       navigate('/');
     } catch (err) {
       console.error('Login failed:', err);
       setError('Invalid username or password');
+    } finally{
+      dispatch(setLoading(false));
     }
   };
 

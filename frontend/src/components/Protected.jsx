@@ -2,23 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import api from '../services/api'
+import Login from '../pages/Login'
+import { useSelector } from 'react-redux'
 
 const Protected = ({ children }) => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const { isDarkMode } = useTheme();
+    const isAutherised = useSelector(state => state.user.isAutherised);
+    const loading = useSelector(state => state.user.loading)
 
-    useEffect(() => {
-        api.get('/auth/me')
-        .then(response => {
-            setIsLoading(false);
-        })
-        .catch(() => {
-            navigate("/login");
-        });
-    }, [navigate]);
+    // console.log(isAutherised);
+    
 
-    if (isLoading) {
+    if (loading) {
         return (
             <div className={`min-h-screen flex items-center justify-center ${
                 isDarkMode 
@@ -33,7 +30,7 @@ const Protected = ({ children }) => {
         );
     }
 
-    return children;
+    return isAutherised ? children : <Login />;
 }
 
 export default Protected

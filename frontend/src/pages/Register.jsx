@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
+import { useDispatch } from 'react-redux';
+import { setIsAutherised, setUser } from '../store/features/userSlice';
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,6 +16,7 @@ const Register = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
     setError('');
+    
 
     try {
       const response = await axios.post(
@@ -21,7 +25,9 @@ const Register = () => {
         { withCredentials: true }
       );
       console.log('Register Success:', response.data);
-      navigate('/login');
+      dispatch(setUser(response.data.user));
+      dispatch(setIsAuthorised(true));
+      navigate('/')
     } catch (err) {
       console.error('Registration failed:', err);
       setError('Registration failed. Try again.');
