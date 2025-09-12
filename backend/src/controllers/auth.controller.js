@@ -19,6 +19,8 @@ const COOKIE_OPTIONS = {
 // ================== Register ==================
 export async function registerUser(req, res) {
   const { username, password } = req.body;
+  console.log(username);
+  
 
   try {
     const existingUser = await userModel.findOne({ username });

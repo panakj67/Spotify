@@ -9,23 +9,15 @@ const app = express();
 // ✅ Whitelisted frontend domains
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://song-steam-frontend.onrender.com'
+  'https://song-steam-frontend.onrender.com', process.env.FRONTEND_URL
 ];
 
 // ✅ CORS middleware
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`❌ Blocked CORS request from: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  })
-);
+// Allow your frontend origin and credentials
+app.use(cors({
+  origin: allowedOrigins,  // frontend URL
+  credentials: true
+}));
 
 // ✅ Middlewares
 app.use(express.json());
