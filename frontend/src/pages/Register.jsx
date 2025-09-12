@@ -28,7 +28,7 @@ const Register = () => {
       // console.log('Register Success:', response.data);
       toast.success('Registered successfully!');
       dispatch(setUser(response.data.user));
-      dispatch(setIsAuthorised(true));
+      dispatch(setIsAutherised(true));
       navigate('/')
     } catch (err) {
       // console.error('Registration failed:', err);
@@ -131,7 +131,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 rounded-xl font-semibold transform hover:scale-[1.02] transition-all duration-300 ${
+            className={`w-full py-3 rounded-xl cursor-pointer font-semibold transform hover:scale-[1.02] transition-all duration-300 ${
               isDarkMode
                 ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'

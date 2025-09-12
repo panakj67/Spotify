@@ -133,7 +133,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 rounded-xl font-semibold transform hover:scale-[1.02] transition-all duration-300 ${
+            className={`w-full py-3 cursor-pointer rounded-xl font-semibold transform hover:scale-[1.02] transition-all duration-300 ${
               isDarkMode
                 ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'

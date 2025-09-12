@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Navigation from '../components/Navigation'
 import { useTheme } from '../context/ThemeContext';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../store/features/userSlice';
+import toast from 'react-hot-toast';
 
 const Upload = () => {
   const [title, setTitle] = useState('');
@@ -10,6 +13,7 @@ const Upload = () => {
   const [audioFile, setAudioFile] = useState(null);
   const [audioPreview, setAudioPreview] = useState(null); // ✅ added for preview
   const { isDarkMode } = useTheme();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -19,7 +23,7 @@ const Upload = () => {
     formData.append('title', title);
     formData.append('artist', artist);
     formData.append('chacha', audioFile); // ✅ fixed from 'chacha' to 'audio'
-
+    dispatch(setLoading(true));
     axios.post('/songs/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -28,11 +32,14 @@ const Upload = () => {
     })
     .then((response) => {
       console.log(response.data);
+      toast.success('Music uploaded successfully!')
       navigate('/');
     })
     .catch((err) => {
+      toast.error('Upload failed, Please try again.')
       console.error('Upload error:', err);
     });
+    dispatch(setLoading(false));
   };
 
   return (
@@ -158,7 +165,7 @@ const Upload = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 rounded-xl font-semibold transform hover:scale-[1.02] transition-all duration-300 mt-8 ${
+            className={`w-full py-3 mb-10 rounded-xl cursor-pointer font-semibold transform hover:scale-[1.02] transition-all duration-300 mt-8 ${
               isDarkMode
                 ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
@@ -169,7 +176,7 @@ const Upload = () => {
         </form>
 
         {/* Navigation */}
-        <div className="fixed bottom-0 w-full z-50">
+        <div className=" w-full ">
           <Navigation />
         </div>
       </div>
