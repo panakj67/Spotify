@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsAutherised, setUser } from '../store/features/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const Profile = () => {
         // You can also redirect user to login page
         dispatch(setUser(null));
         dispatch(setIsAutherised(false));
+        toast.success('Logged out successfully!');
 
         navigate('/login');
       } else {

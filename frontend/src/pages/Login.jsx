@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
 import { useDispatch } from 'react-redux';
 import { setIsAutherised, setLoading, setUser } from '../store/features/userSlice'; 
+import toast from 'react-hot-toast';
 
 
 const Login = () => {
@@ -28,10 +29,10 @@ const Login = () => {
       
       dispatch(setUser(response.data.user));
       dispatch(setIsAutherised(true));
-      console.log('Login Success:', response.data);
+      toast.success('Logged in successfully!')
       navigate('/');
     } catch (err) {
-      console.error('Login failed:', err);
+      toast.error('Login failed. Please check your credentials.');
       setError('Invalid username or password');
     } finally{
       dispatch(setLoading(false));

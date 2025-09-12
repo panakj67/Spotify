@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
 import { useDispatch } from 'react-redux';
 import { setIsAutherised, setUser } from '../store/features/userSlice';
+import toast from 'react-hot-toast';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,12 +25,14 @@ const Register = () => {
         { username, password },
         { withCredentials: true }
       );
-      console.log('Register Success:', response.data);
+      // console.log('Register Success:', response.data);
+      toast.success('Registered successfully!');
       dispatch(setUser(response.data.user));
       dispatch(setIsAuthorised(true));
       navigate('/')
     } catch (err) {
-      console.error('Registration failed:', err);
+      // console.error('Registration failed:', err);
+      toast.error('Registration failed. Try again.');
       setError('Registration failed. Try again.');
     }
   };

@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsAutherised, setLoading, setUser } from './store/features/userSlice'
+import { Toaster} from 'react-hot-toast'
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <ThemeProvider>
+      <Toaster/>
       <AppRoutes />
       <GlobalAudioPlayer />
     </ThemeProvider>
