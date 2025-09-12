@@ -69,6 +69,8 @@ export async function getSongById(req, res) {
 // Search songs by title or artist
 export const searchSong = async (req, res) => {
   try {
+    // console.log(req.query.text);
+    
     const query = req.query.text || '';
 
     const songs = await songModel.find({
@@ -77,6 +79,7 @@ export const searchSong = async (req, res) => {
         { artist: { $regex: query, $options: 'i' } }
       ]
     });
+    // console.log(songs)
 
     res.status(200).json({ songs });
   } catch (error) {

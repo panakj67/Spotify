@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 // API configuration
-export const API_BASE_URL = 'https://song-steam-backend.onrender.com';
+export const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export const API_ENDPOINTS = {
   SEARCH: '/songs/search-songs',
   GET_SONGS: '/songs/get-songs',
 };
-
 // Default API config
 export const apiConfig = {
   baseURL: API_BASE_URL,

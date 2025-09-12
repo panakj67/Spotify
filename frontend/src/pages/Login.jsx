@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'https://song-steam-backend.onrender.com/auth/login',
+        '/auth/login',
         { username, password },
         { withCredentials: true }
       );

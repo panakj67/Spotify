@@ -8,6 +8,7 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [audioFile, setAudioFile] = useState(null);
+  const [audioPreview, setAudioPreview] = useState(null); // ✅ added for preview
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
 
@@ -19,7 +20,7 @@ const Upload = () => {
     formData.append('artist', artist);
     formData.append('chacha', audioFile); // ✅ fixed from 'chacha' to 'audio'
 
-    axios.post('https://song-steam-backend.onrender.com/songs/upload', formData, {
+    axios.post('/songs/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -134,11 +135,25 @@ const Upload = () => {
                   type="file"
                   accept="audio/*"
                   required
-                  onChange={(e) => setAudioFile(e.target.files[0])}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setAudioFile(file);
+                    if (file) {
+                      setAudioPreview(URL.createObjectURL(file)); // ✅ preview URL
+                    }
+                  }}
                   className="hidden"
                 />
               </label>
             </div>
+
+            {/* ✅ Audio Preview */}
+            {audioPreview && (
+              <div className="mt-4">
+                <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Preview:</p>
+                <audio controls src={audioPreview} className="w-full mt-2" />
+              </div>
+            )}
           </div>
 
           <button

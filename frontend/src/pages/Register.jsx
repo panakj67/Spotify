@@ -16,7 +16,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        'https://song-steam-backend.onrender.com/auth/register',
+        '/auth/register',
         { username, password },
         { withCredentials: true }
       );

@@ -29,7 +29,7 @@ const Home = () => {
  useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get("https://song-steam-backend.onrender.com/songs/get-songs", {
+                const response = await axios.get("/songs/get-songs", {
                     withCredentials: true
                 });
                 dispatch(setSongs(response.data.songs));

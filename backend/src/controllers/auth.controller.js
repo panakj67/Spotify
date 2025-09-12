@@ -47,14 +47,15 @@ export async function registerUser(req, res) {
       }
     });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+      console.error("Register Error:", err);  // 👈 add this
+      res.status(500).json({ message: "Server error", error: err.message });
   }
 }
 
 // ================== Login ==================
 export async function loginUser(req, res) {
   const { username, password } = req.body;
-
+  
   try {
     const user = await userModel.findOne({ username });
     if (!user) {
@@ -87,7 +88,7 @@ export async function loginUser(req, res) {
 // ================== Me ==================
 export async function me(req, res) {
   const token = req.cookies.token;
-
+  
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
