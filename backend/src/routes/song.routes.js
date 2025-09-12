@@ -34,7 +34,7 @@ router.use((req,res,next)=>{
     
 })
 
-router.post('/upload', uploadMiddleware.single("chacha") ,upload)
+router.post('/upload', uploadMiddleware.single("audio") ,upload)
 
 router.get('/get-songs',getSongs)
 
