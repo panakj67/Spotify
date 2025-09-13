@@ -5,18 +5,21 @@ import NowPlaying from '../components/NowPlaying';
 import { useTheme } from '../context/ThemeContext';
 import {
   setSongs,
+  selectSongs,
   setFilteredSongs,
   setCurrentSong,
   togglePlayPause,
   selectFilteredSongs,
   selectCurrentSong,
-  selectIsPlaying
+  selectIsPlaying,
+  setCurrentIndex
 } from '../store/features/songSlice';
 import api, { API_ENDPOINTS } from '../services/api';
 
 const Search = () => {
   const dispatch = useDispatch();
   const filteredSongs = useSelector(selectFilteredSongs);
+  const songs = useSelector(selectSongs);
   const currentSong = useSelector(selectCurrentSong);
   const isPlaying = useSelector(selectIsPlaying);
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,14 +31,12 @@ const Search = () => {
   const fetchAndFilterSongs = async (query) => {
     try {
       const res = await api.get(API_ENDPOINTS.GET_SONGS);
-
       if (res.data?.songs && Array.isArray(res.data.songs)) {
         return res.data.songs.filter(song =>
           song.title?.toLowerCase().includes(query.toLowerCase()) ||
           song.artist?.toLowerCase().includes(query.toLowerCase())
         );
       }
-
       return [];
     } catch (err) {
       console.error('Error fetching all songs:', err);
@@ -55,7 +56,6 @@ const Search = () => {
         });
 
         if (!isSubscribed) return false;
-
         if (res.data && Array.isArray(res.data.songs)) {
           dispatch(setFilteredSongs(res.data.songs));
           return true;
@@ -82,7 +82,7 @@ const Search = () => {
       try {
         const searchSuccessful = await performSearch();
         if (!isSubscribed) return;
-        
+
         if (!searchSuccessful) {
           dispatch(setFilteredSongs([]));
         }
@@ -95,7 +95,6 @@ const Search = () => {
           return;
         }
 
-        // For other errors, try fallback search
         try {
           const filteredSongs = await fetchAndFilterSongs(searchQuery);
           if (!isSubscribed) return;
@@ -115,14 +114,11 @@ const Search = () => {
           setError('Search is currently unavailable. Please try again later.');
         }
       } finally {
-        if (isSubscribed) {
-          setIsLoading(false);
-        }
+        if (isSubscribed) setIsLoading(false);
       }
     };
 
     const timer = setTimeout(handleSearch, 500);
-
     return () => {
       isSubscribed = false;
       controller.abort();
@@ -130,23 +126,37 @@ const Search = () => {
     };
   }, [searchQuery, dispatch]);
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const res = await api.get(API_ENDPOINTS.GET_SONGS);
+        if (res.data?.songs) dispatch(setSongs(res.data.songs));
+      } catch (err) {
+        console.error("Error loading songs:", err);
+      }
+    };
+    fetchSongs();
+  }, [dispatch]);
 
-  const handlePlaySong = (song) => {
-    dispatch(setCurrentSong(song));
+  const handleSearchInput = (e) => setSearchQuery(e.target.value);
+
+  const handlePlaySong = (index) => {
+    const song = filteredSongs[index];
+    const songIndex = songs.findIndex((s) => s._id === song._id);
+    dispatch(setCurrentIndex(songIndex));
+    dispatch(togglePlayPause());
     dispatch(togglePlayPause());
   };
 
   return (
     <div className={`min-h-screen flex flex-col items-center justify-between px-0 pb-24 ${
       isDarkMode
-        ? 'bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a]'
+        ? 'bg-gradient-to-br from-[#121212] via-[#1f1f2e] to-[#0f0f1a]'
         : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
     }`}>
       
-      <header className={`w-full sticky top-0 z-30 px-0 pt-0 pb-0 shadow-lg ${
+      {/* Header */}
+      <header className={`w-full sticky top-0 z-30 shadow-lg ${
         isDarkMode ? 'bg-black/30 backdrop-blur-lg' : 'bg-white/70 backdrop-blur-lg'
       }`}>
         <div className="flex flex-col items-center justify-center py-6 px-4">
@@ -156,7 +166,7 @@ const Search = () => {
               src='https://th.bing.com/th/id/R.ae55227397e7147121e094f8e2f74a73?rik=zXzl4Bhg7rCp0w&riu=http%3A%2F%2Forig05.deviantart.net%2F8698%2Ff%2F2015%2F245%2Fc%2F9%2Fapple_music_logo_by_mattroxzworld-d982zrj.png&ehk=0g0dvvSHP6JWZKat6ZPA1Dx5m6PmhuErbEdzVmmyNHM%3D&risl=&pid=ImgRaw&r=0'
               alt="logo"
             />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
+            <h1 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
               Search Music
             </h1>
           </div>
@@ -166,8 +176,8 @@ const Search = () => {
                 type="text"
                 placeholder="Type to search songs or artists..."
                 value={searchQuery}
-                onChange={handleSearch}
-                className={`w-full py-4 pl-12 pr-4 rounded-xl text-lg transition-all duration-300 ${
+                onChange={handleSearchInput}
+                className={`w-full py-4 pl-12 pr-4 rounded-xl text-lg transition-all duration-300 shadow-inner ${
                   isDarkMode
                     ? 'bg-white/5 border-white/10 focus:border-purple-500/50 text-white placeholder:text-gray-400'
                     : 'bg-white border-purple-100 focus:border-purple-400 text-gray-900 placeholder:text-gray-400'
@@ -186,6 +196,7 @@ const Search = () => {
         </div>
       </header>
 
+      {/* Main */}
       <main className="w-full max-w-2xl mx-auto flex-1 overflow-y-auto py-6 px-4 bg-transparent">
         {isLoading ? (
           <div className="flex justify-center items-center h-40">
@@ -215,23 +226,23 @@ const Search = () => {
             {filteredSongs.map((song, idx) => (
               <div
                 key={song._id || idx}
-                className={`flex items-center p-4 backdrop-blur-md rounded-2xl cursor-pointer border transition-all duration-300 ${
+                className={`flex items-center p-4 backdrop-blur-md rounded-2xl cursor-pointer border transition-all duration-300 shadow-md transform hover:scale-105 ${
                   isDarkMode
                     ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-purple-500/50'
                     : 'bg-white border-purple-100 hover:bg-purple-50 hover:border-purple-200'
                 }`}
-                onClick={() => handlePlaySong(song)}
+                onClick={() => handlePlaySong(idx)}
               >
                 <img
                   src={song.poster}
-                  className="w-16 h-16 rounded-xl object-cover mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300"
+                  className="w-16 h-16 rounded-xl object-cover mr-4 shadow-lg transform hover:scale-110 transition-transform duration-300"
                   alt={song.title}
                 />
                 <div className="flex-1">
                   <div className={`font-semibold text-lg mb-1 ${
                     isDarkMode ? 'text-white' : 'text-gray-800'
                   }`}>{song.title}</div>
-                  <div className="text-sm text-[#4e54c8] truncate font-medium">{song.artist}</div>
+                  <div className="text-sm text-purple-500 truncate font-medium">{song.artist}</div>
                 </div>
               </div>
             ))}
@@ -239,6 +250,7 @@ const Search = () => {
         )}
       </main>
 
+      {/* Now Playing */}
       {currentSong && (
         <div className="fixed bottom-16 left-0 w-full px-2 z-40">
           <NowPlaying
@@ -249,6 +261,7 @@ const Search = () => {
         </div>
       )}
 
+      {/* Navigation */}
       <div className="fixed bottom-0 left-0 w-full z-50">
         <Navigation />
       </div>

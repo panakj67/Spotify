@@ -9,9 +9,12 @@ import Protected from '../components/Protected'
 import Profile from '../pages/Profile'
 
 
+
 const AppRoutes = () => {
     return (
+        
         <Router>
+            {/* <NowPlaying /> */}
             <Routes>
                 {/* Public Routes */}
                 <Route path='/register' element={<Register />} />

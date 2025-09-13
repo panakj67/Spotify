@@ -12,7 +12,8 @@ import {
     selectSongs,
     selectCurrentSong,
     selectIsPlaying,
-    setSongs
+    setSongs,
+    setCurrentIndex
 } from '../store/features/songSlice';
 
 const Home = () => {
@@ -21,9 +22,13 @@ const Home = () => {
     const currentSong = useSelector(selectCurrentSong);
     const isPlaying = useSelector(selectIsPlaying);
     const { isDarkMode, toggleTheme } = useTheme();
+    const user = useSelector(state => state.user.user)
 
-    const handlePlaySong = (song) => {
-        dispatch(setCurrentSong(song));
+    const handlePlaySong = (index) => {
+        dispatch(setCurrentIndex(index));
+        if (!isPlaying) {
+            dispatch(togglePlayPause());
+        }
     };
 
  useEffect(() => {
@@ -45,15 +50,12 @@ const Home = () => {
     }, [dispatch]);
 
     return (
-            <div className={`min-h-screen flex flex-col items-center justify-between px-0 pb-24 ${
-        isDarkMode 
-          ? 'bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a]' 
-          : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
-      }`}>
+            <div className={`min-h-screen bg-black flex flex-col items-center justify-between px-0 pb-24 
+            ${ isDarkMode ? 'bg-black' : 'bg-white'}`}>
         {/* Header */}
-        <header className={`w-full sticky top-0 z-20 backdrop-blur-lg ${
-          isDarkMode ? 'bg-black/30' : 'bg-white/70'
-        } px-6 py-5 flex justify-between items-center`}>
+        <header className={`w-full sticky top-0 z-20  ${
+          isDarkMode ? 'bg-black' : 'bg-white/70'
+        } px-6 py-2 flex justify-between items-center`}>
           <h1 className="text-3xl font-bold flex gap-4 items-center tracking-wider">
             <img
               className='h-12 w-12 shadow-2xl rounded-2xl object-cover transform rotate-12'
@@ -65,7 +67,7 @@ const Home = () => {
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleTheme} 
-              className={`p-2 rounded-full transition-all ${
+              className={`p-2 rounded-full cursor-pointer transition-all ${
                 isDarkMode 
                   ? 'text-gray-400 hover:bg-white/10' 
                   : 'text-gray-600 hover:bg-gray-100'
@@ -106,45 +108,64 @@ const Home = () => {
           </div>
         </header>
 
+       <div className='flex flex-col flex-start w-full px-6'>
+         <h1 className='text-sm text-white'>Made For</h1>
+         <h1 className='text-white font-mono text-3xl'>{user?.username}</h1>
+       </div>
+
         {/* Song List */}
-        <main className="w-full max-w-2xl mx-auto flex-1 overflow-y-auto py-6 px-4 bg-transparent">
-          <div className="grid gap-4">
-            {songs.map((song, idx) => (
-              <div
-                key={song._id || idx}
-                className={`flex items-center p-4 backdrop-blur-md rounded-2xl cursor-pointer border transition-all duration-300 ${
-                  isDarkMode
-                    ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-purple-500/50'
-                    : 'bg-white border-purple-100 hover:bg-purple-50 hover:border-purple-200'
-                }`}
-                onClick={() => handlePlaySong(song)}
-              >
-                <img
-                  src={song.poster}
-                  className="w-16 h-16 rounded-xl object-cover mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300"
-                  alt={song.title}
-                />
-                <div className="flex-1">
-                  <div className={`font-semibold text-lg mb-1 ${
-                    isDarkMode ? 'text-white' : 'text-gray-800'
-                  }`}>{song.title}</div>
-                  <div className={`text-sm ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`}>{song.artist}</div>
-                </div>
-                <div className={`ml-4 p-3 rounded-full transition-colors ${
-                  isDarkMode
-                    ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30'
-                    : 'bg-purple-100 text-purple-600 hover:bg-purple-200'
-                }`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" 
-                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </div>
-              </div>
-            ))}
-          </div>
+        <main className="w-full  mx-auto flex-1 overflow-y-auto py-6 px-4 bg-transparent">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+               {songs.map((song, idx) => (
+                 <div
+                   key={song._id || idx}
+                   className={`group relative flex flex-col items-center p-4 rounded-2xl cursor-pointer border transition-all duration-300
+                     ${isDarkMode
+                       ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-purple-500/50'
+                       : 'bg-white border-purple-100 hover:bg-purple-50 hover:border-purple-200'
+                     }`}
+                   onClick={() => handlePlaySong(idx)}
+                 >
+                   {/* Album Poster */}
+                   <div className="relative w-full aspect-square">
+                     <img
+                       src={song.poster}
+                       className="w-full h-full rounded-lg object-cover shadow-lg transform group-hover:scale-105 transition-transform duration-300"
+                       alt={song.title}
+                     />
+                     {/* Play Button (centered) */}
+                     <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}>
+                       <div className={`p-4 rounded-full shadow-lg
+                         ${isDarkMode 
+                           ? 'bg-purple-500/80 text-white hover:bg-purple-600' 
+                           : 'bg-purple-500 text-white hover:bg-purple-600'
+                         }`}
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" 
+                           strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                           <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                         </svg>
+                       </div>
+                     </div>
+                   </div>
+             
+                   {/* Song Info */}
+                   <div className="w-full mt-3 text-center">
+                     <div className={`font-semibold text-base truncate
+                       ${isDarkMode ? 'text-white' : 'text-gray-800'}
+                     `}>
+                       {song.title}
+                     </div>
+                     <div className={`text-sm truncate
+                       ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}
+                     `}>
+                       {song.artist}
+                     </div>
+                   </div>
+                 </div>
+               ))}
+             </div>
+
         </main>
 
         {/* Floating Now Playing Bar */}
@@ -157,7 +178,7 @@ const Home = () => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 w-full z-50">
+        <div>
           <Navigation />
         </div>
       </div>

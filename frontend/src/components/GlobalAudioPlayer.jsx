@@ -1,10 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
+  nextSong,
   selectCurrentSong,
   selectIsPlaying,
-  togglePlayPause,
-} from '../store/features/songSlice';
+  setProgress,
+  setDuration,
+  selectSeekTo,
+  clearSeek,
+} from "../store/features/songSlice";
 
 const GlobalAudioPlayer = () => {
   const audioRef = useRef(null);
@@ -12,33 +16,46 @@ const GlobalAudioPlayer = () => {
 
   const currentSong = useSelector(selectCurrentSong);
   const isPlaying = useSelector(selectIsPlaying);
+  const seekTo = useSelector(selectSeekTo);
 
   useEffect(() => {
     if (!audioRef.current) return;
     if (isPlaying) {
-      audioRef.current.play().catch((err) => {
-        console.error("Audio play failed:", err);
-      });
+      audioRef.current.play().catch((err) => console.error(err));
     } else {
       audioRef.current.pause();
     }
   }, [isPlaying, currentSong]);
 
-  const handleEnded = () => {
-    dispatch(togglePlayPause()); // stop play icon when audio ends
+  useEffect(() => {
+    if (seekTo !== null && audioRef.current) {
+      audioRef.current.currentTime = seekTo;
+      dispatch(clearSeek());
+    }
+  }, [seekTo, dispatch]);
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      dispatch(setDuration(audioRef.current.duration));
+    }
   };
 
-  if (!currentSong) return null;
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      dispatch(setProgress(audioRef.current.currentTime));
+    }
+  };
 
-  return (
+  return currentSong ? (
     <audio
       ref={audioRef}
       src={currentSong.audio}
-      autoPlay
-      onEnded={handleEnded}
-      style={{ display: 'none' }}
+      onLoadedMetadata={handleLoadedMetadata}
+      onTimeUpdate={handleTimeUpdate}
+      onEnded={() => dispatch(nextSong())}
+      style={{ display: "none" }}
     />
-  );
+  ) : null;
 };
 
 export default GlobalAudioPlayer;

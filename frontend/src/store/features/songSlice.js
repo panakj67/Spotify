@@ -1,76 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 // Sample initial music data
 const initialState = {
-  songs: [
-    {
-      id: 1,
-      title: "Ho Hey",
-      artist: "The Lumineers",
-      image: "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?q=80&w=2944&auto=format&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Fix You",
-      artist: "Coldplay",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2946&auto=format&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Shape of You",
-      artist: "Ed Sheeran",
-      image: "https://images.unsplash.com/photo-1507525338232-5e96371ee660?q=80&w=2946&auto=format&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Rolling in the Deep",
-      artist: "Adele",
-      image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=2952&auto=format&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Believer",
-      artist: "Imagine Dragons",
-      image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?q=80&w=2944&auto=format&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Sugar",
-      artist: "Maroon 5",
-      image: "https://images.unsplash.com/photo-1566208541738-35a5e8d33930?q=80&w=2952&auto=format&fit=crop"
-    },
-    {
-      id: 7,
-      title: "Shake It Off",
-      artist: "Taylor Swift",
-      image: "https://images.unsplash.com/photo-1501426026826-31c667bdf23d?q=80&w=2736&auto=format&fit=crop"
-    },
-    {
-      id: 8,
-      title: "Sorry",
-      artist: "Justin Bieber",
-      image: "https://images.unsplash.com/photo-1520262454473-a1a82276a574?q=80&w=2944&auto=format&fit=crop"
-    },
-    {
-      id: 9,
-      title: "Midnight Serenade",
-      artist: "Luna",
-      image: "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=2948&auto=format&fit=crop"
-    }
-  ],
-  currentSong: {
-    id: 9,
-    title: "Midnight Serenade",
-    artist: "Luna",
-    image: "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=2948&auto=format&fit=crop"
-  },
+  songs: [],
+  currentIndex: 0,
   isPlaying: false,
-  filteredSongs: [] // For search functionality
+  progress : 0,
+  duration : 0,
+  seekTo : null,
+  filteredSongs: [], // For search functionality
+  show : false
 };
 
 export const songSlice = createSlice({
   name: 'songs',
   initialState,
   reducers: {
+    toggleShow : (state) => {
+      state.show = !state.show
+    },
     setCurrentSong: (state, action) => {
       state.currentSong = action.payload;
       state.isPlaying = true;
@@ -96,17 +43,43 @@ export const songSlice = createSlice({
     setSongs : (state, action) => {
       state.songs = action.payload;
     },
+    nextSong : (state) => {
+      state.currentIndex = (state.currentIndex + 1) % state.songs.length;
+    },
+    prevSong : (state) => {
+      state.currentIndex = (state.currentIndex - 1 + state.songs.length) % state.songs.length;
+    },
+    setCurrentIndex : (state, action) =>{
+      state.currentIndex = action.payload;
+    },
+    setProgress : (state, action) => {
+      state.progress = action.payload;
+    },
+    setDuration: (state, action) => {
+      state.duration = action.payload;
+    },
+    seekSong: (state, action) => {
+      state.seekTo = action.payload;
+    },
+    clearSeek: (state) => {
+      state.seekTo = null;
+    },
     setFilteredSongs: (state, action) => {
       state.filteredSongs = action.payload;
     }
   },
 });
 
-export const { setCurrentSong, togglePlayPause, searchSongs, addSong, setSongs,setFilteredSongs } = songSlice.actions;
+export const { setCurrentSong, togglePlayPause, searchSongs, addSong, setSongs
+  ,setCurrentIndex, toggleShow, setDuration, seekSong, clearSeek,
+   setProgress, nextSong, prevSong, setFilteredSongs } = songSlice.actions;
 
 export const selectSongs = (state) => state.songs.songs;
-export const selectCurrentSong = (state) => state.songs.currentSong;
+export const selectCurrentSong = (state) => state.songs.songs[state.songs.currentIndex];
 export const selectIsPlaying = (state) => state.songs.isPlaying;
 export const selectFilteredSongs = (state) => state.songs.filteredSongs;
+export const selectProgress = (state) => state.songs.progress;
+export const selectDuration = (state) => state.songs.duration;
+export const selectSeekTo = (state) => state.songs.seekTo;
 
 export default songSlice.reducer;
