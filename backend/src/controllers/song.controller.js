@@ -4,11 +4,13 @@ import songModel from '../models/song.model.js'
 // Upload a new song
 export async function upload(req, res) {
   try {
-    const { artist, title } = req.body
+    const { artist, title, poster } = req.body
 
     if (!req.file || !artist || !title) {
       return res.status(400).json({ message: "All fields are required: file, artist, title" })
     }
+
+    const posterValue = poster && poster.trim() !== '' ? poster : undefined;
 
     const result = await uploadFile(req.file.buffer)
     const audioUrl = result.url
@@ -16,6 +18,7 @@ export async function upload(req, res) {
     const song = await songModel.create({
       artist,
       title,
+      poster : posterValue,
       audio: audioUrl,
     })
 
