@@ -17,16 +17,15 @@ const Protected = ({ children }) => {
 
     if (loading) {
         return (
-            <div className={`min-h-screen flex items-center justify-center ${
-                isDarkMode 
-                    ? 'bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a]' 
-                    : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
-            }`}>
-                <div className="flex flex-col items-center">
-                    <div className="w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
-                    <p className={`mt-4 text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Loading...</p>
-                </div>
-            </div>
+            <div
+        className={`flex flex-col items-center text-blue-600 ${isDarkMode ? "bg-black" : "bg-gradient-to-tr from-white via-indigo-50 to-indigo-100"} 
+ justify-center h-screen`}
+      >
+        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin"></div>
+        <p className="mt-6 text-xl font-semibold animate-pulse tracking-wide">
+          Loading, please wait...
+        </p>
+      </div>
         );
     }
 

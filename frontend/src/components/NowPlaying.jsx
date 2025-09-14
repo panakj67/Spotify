@@ -120,7 +120,8 @@ const NowPlaying = () => {
         // Mini Player
         <div
           onClick={() => dispatch(toggleShow())}
-          className="fixed bottom-20 bg-gradient-to-r from-indigo-500/20 to-purple-500/30 cursor-pointer left-1/2 transform -translate-x-1/2 bg-white shadow-lg w-[90vw] max-w-md rounded-2xl flex flex-col px-4 sm:px-6 z-50 border border-gray-200 py-2"
+          className={`fixed bottom-20 bg-gradient-to-r from-indigo-500/20 to-purple-500/30
+             cursor-pointer left-1/2 transform -translate-x-1/2 bg-white shadow-lg w-[90vw] max-w-md rounded-2xl flex flex-col px-4 sm:px-6 z-50 border border-gray-200 py-2`}
         >
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 flex-1 truncate">
@@ -171,7 +172,7 @@ const NowPlaying = () => {
               max={duration || 0}
               value={progress}
               onChange={handleSeek}
-              className="w-full mt-2 accent-purple-500 cursor-pointer"
+              className="w-full mt-2 accent-purple-500 transition-all duration-200 ease-linear cursor-pointer"
             />
           </div>
         </div>

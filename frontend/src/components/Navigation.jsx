@@ -45,7 +45,7 @@ const navItems = [
   },
 ];
 
-const Navigation = () => {
+const Navigation = (bgColor) => {
   const location = useLocation();
   const { isDarkMode } = useTheme();
   const show = useSelector(state => state.songs.show);
@@ -55,7 +55,7 @@ const Navigation = () => {
   return (!show && (
     <div
       className={`fixed bottom-0 left-0 w-full backdrop-blur-xl border-t shadow-lg z-50
-      ${isDarkMode ? "bg-[#0f0f1f]/90 border-white/10" : "bg-white/90 border-gray-200"}`}
+      ${isDarkMode ? "bg-black" : "bg-white/90 border-gray-200"}`}
     >
       <div className="flex justify-around items-center py-1">
         {navItems.map((item) => {

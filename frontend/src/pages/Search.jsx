@@ -151,7 +151,7 @@ const Search = () => {
   return (
     <div className={`min-h-screen flex flex-col items-center justify-between px-0 pb-24 ${
       isDarkMode
-        ? 'bg-gradient-to-br from-[#121212] via-[#1f1f2e] to-[#0f0f1a]'
+        ? 'bg-black'
         : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
     }`}>
       

@@ -40,24 +40,24 @@ const Login = () => {
   };
 
   return (
-    <div className={`min-h-screen flex justify-center items-center py-10 px-3 ${
+    <div className={`min-h-screen flex justify-center items-center py-4 px-3 ${
         isDarkMode 
-          ? 'bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a]' 
+          ? 'bg-black' 
           : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
       }`}>
-      <main className={`w-[400px] backdrop-blur-xl rounded-3xl p-8 ${
+      <main className={`w-[420px] backdrop-blur-xl rounded-xl px-8 py-6 ${
         isDarkMode
           ? 'bg-white/10 border border-white/10'
           : 'bg-white/70 border border-purple-100'
       }`}>
-        <h1 className={`text-4xl font-bold text-center mb-6 bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text`}>
+        <h1 className={`text-4xl font-bold text-center mb-2 bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text`}>
           Welcome Back
         </h1>
-        <p className={`text-center mb-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className={`text-center mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           Sign in to your account
         </p>
 
-        <section className="flex gap-4 justify-center mb-8">
+        <section className="flex gap-4 justify-center mb-4">
           <button className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 ${
             isDarkMode
               ? 'bg-white/5 hover:bg-white/10 border border-white/10'
@@ -84,13 +84,13 @@ const Login = () => {
           </button>
         </section>
 
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-4">
           <div className={`flex-1 h-px ${isDarkMode ? 'bg-white/10' : 'bg-gray-200'}`}></div>
           <span className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>or</span>
           <div className={`flex-1 h-px ${isDarkMode ? 'bg-white/10' : 'bg-gray-200'}`}></div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-2">
           <div className="space-y-2">
             <label className={`text-sm ml-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Username
@@ -133,7 +133,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 cursor-pointer rounded-xl font-semibold transform hover:scale-[1.02] transition-all duration-300 ${
+            className={`w-full py-3 cursor-pointer rounded-xl font-semibold transform hover:scale-[1.02] mt-4 transition-all duration-300 ${
               isDarkMode
                 ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'

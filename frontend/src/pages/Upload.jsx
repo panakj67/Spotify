@@ -54,16 +54,17 @@ const Upload = () => {
   }, [audioPreview])
 
   return (
-    <section className={`min-h-screen flex flex-col justify-between p-6 ${
+    <section className={`max-h-[90vh] flex flex-col justify-between p-6 ${
   isDarkMode 
-    ? 'bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a]' 
+    ? 'bg-black' 
     : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
 }`}>
-      <div className={`max-w-md mx-auto overflow-hidden w-full backdrop-blur-xl shadow-2xl rounded-3xl p-8 mt-8 border ${
-  isDarkMode 
-    ? 'bg-white/10 border-white/10' 
-    : 'bg-white/70 border-purple-100'
-}`}>
+      <div className={`max-w-xl mx-auto overflow-y-auto scroll w-full backdrop-blur-xl shadow-2xl rounded-2xl p-8 mt-8 border 
+      ${
+        isDarkMode
+          ? 'bg-gradient-to-br from-[#121212] via-[#1f1f2e] to-[#0f0f1a]'
+          : 'bg-gradient-to-br from-purple-50 via-white to-purple-50 border-purple-200'
+      }`} style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center h-60">
@@ -201,9 +202,10 @@ const Upload = () => {
           </>
         )}
 
-        {/* Navigation */}
-        <Navigation />
+        
       </div>
+      {/* Navigation */}
+        <Navigation />
     </section>
   )
 }
