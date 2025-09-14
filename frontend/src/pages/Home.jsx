@@ -79,11 +79,13 @@ const Home = () => {
                  >
                    {/* Album Poster */}
                    <div className="relative w-full aspect-square">
-                     <img
-                       src={song.poster}
-                       className="w-full h-full rounded-lg object-cover shadow-lg transform group-hover:scale-105 transition-transform duration-300"
-                       alt={song.title}
-                     />
+                     <div className="relative w-full rounded-lg aspect-square overflow-hidden">
+                        <img
+                          src={song.poster}
+                          className="w-full h-full rounded-lg object-cover shadow-lg transform group-hover:scale-105 transition-transform duration-300"
+                          alt={song.title}
+                        />
+                      </div>
                      {/* Play Button (centered) */}
                      <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}>
                        <div className={`p-4 rounded-full shadow-lg

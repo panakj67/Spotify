@@ -54,12 +54,12 @@ const Upload = () => {
   }, [audioPreview])
 
   return (
-    <section className={`max-h-[90vh] flex flex-col justify-between p-6 ${
+    <section className={`min-h-[90vh] flex flex-col justify-between pb-20 p-6 ${
   isDarkMode 
     ? 'bg-black' 
     : 'bg-gradient-to-br from-purple-50 via-white to-purple-50'
 }`}>
-      <div className={`max-w-xl mx-auto overflow-y-auto scroll w-full backdrop-blur-xl shadow-2xl rounded-2xl p-8 mt-8 border 
+      <div className={`max-w-xl mx-auto scroll w-full backdrop-blur-xl shadow-2xl rounded-2xl px-4 sm:px-8 pt-4 mt-4 border 
       ${
         isDarkMode
           ? 'bg-gradient-to-br from-[#121212] via-[#1f1f2e] to-[#0f0f1a]'
@@ -68,7 +68,7 @@ const Upload = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center h-60">
-            <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin border-purple-500 shadow-lg"></div>
+            <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin border-blue-700 shadow-lg"></div>
             <p className={`mt-4 animate-pulse ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Uploading... please wait</p>
           </div>
         ) : (
