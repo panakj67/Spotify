@@ -7,6 +7,7 @@ import Register from '../pages/Register'
 import Search from '../pages/Search'
 import Protected from '../components/Protected'
 import Profile from '../pages/Profile'
+import Player from '../components/Player'
 
 
 
@@ -22,6 +23,7 @@ const AppRoutes = () => {
 
                 {/* Protected Routes */}
                 <Route path="/" element={<Protected><Home /></Protected>} />
+                <Route path="/player" element={<Protected><Player /></Protected>} />
                 <Route path='/search' element={<Search />} />
                 <Route path="/upload" element={<Protected><Upload /></Protected>} />
                 <Route path="/profile" element={<Protected><Profile /></Protected>} />

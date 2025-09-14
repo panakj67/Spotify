@@ -52,7 +52,7 @@ const Navigation = (bgColor) => {
   
   
 
-  return (!show && (
+  return (
     <div
       className={`fixed bottom-0 left-0 w-full backdrop-blur-xl border-t shadow-lg z-50
       ${isDarkMode ? "bg-black" : "bg-white/90 border-gray-200"}`}
@@ -102,7 +102,7 @@ const Navigation = (bgColor) => {
         })}
       </div>
     </div>
-  ))
+  )
 };
 
 export default Navigation;
