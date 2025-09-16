@@ -27,6 +27,9 @@ export const songSlice = createSlice({
     toggleShow : (state) => {
       state.show = !state.show
     },
+    setIsPlaying : (state, action) => {
+      state.isPlaying = action.payload;
+    }, 
     setCurrentSong: (state, action) => {
       state.currentSong = action.payload;
       state.isPlaying = true;
@@ -93,7 +96,7 @@ export const songSlice = createSlice({
   },
 });
 
-export const { setCurrentSong, togglePlayPause, searchSongs, addSong, setSongs
+export const { setCurrentSong, setIsPlaying, togglePlayPause, searchSongs, addSong, setSongs
   ,setCurrentIndex, setRepeat, toggleShow, toggleSuffle, setDuration, seekSong, clearSeek,
    setProgress, nextSong, prevSong, setFilteredSongs } = songSlice.actions;
 

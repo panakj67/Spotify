@@ -7,7 +7,7 @@ import { setIsAutherised, setUser } from '../store/features/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { setCurrentSong, setSongs } from '../store/features/songSlice';
+import { setCurrentSong, setIsPlaying, setSongs } from '../store/features/songSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -25,6 +25,7 @@ const Profile = () => {
         dispatch(setSongs([]));
         dispatch(setCurrentSong(null));
         dispatch(setIsAutherised(false));
+        dispatch(setIsPlaying(false));
         toast.success('Logged out successfully!');
         navigate('/login');
       }

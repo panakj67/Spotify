@@ -15,10 +15,12 @@ import {
   setCurrentIndex,
   toggleSuffle,
   selectSuffle,
+  setSongs,
 } from '../store/features/songSlice'
 import { useTheme } from '../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Player = () => {
   const currentSong = useSelector(selectCurrentSong);
@@ -32,6 +34,24 @@ const Player = () => {
   const repeat = useSelector(selectRepeat);
   const suffle = useSelector(selectSuffle);
   
+
+    useEffect(() => {
+        const fetchSongs = async () => {
+            try {
+                const response = await axios.get("/songs/get-songs", {
+                    withCredentials: true
+                });
+                dispatch(setSongs(response.data.songs));
+            } catch (error) {
+                if (error.response?.status === 401) {
+                    window.location.href = '/login';
+                }
+                console.error("Error fetching songs:", error);
+            }
+        };
+
+        fetchSongs();
+    }, [dispatch]);
 
   const handleSeek = (e) => {
       const value = Number(e.target.value);
