@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import NowPlaying from '../components/NowPlaying';
 import { useTheme } from '../context/ThemeContext';
@@ -7,26 +7,47 @@ import { setIsAutherised, setUser } from '../store/features/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { setCurrentSong, setSongs } from '../store/features/songSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const user = useSelector(state => state.user.user);
+  const [loading, setLoading] = useState(false);
 
   const logoutHandler = async () => {
+    setLoading(true);
     try {
       const res = await axios.post('/auth/logout', {}, { withCredentials: true });
       if (res.status === 200) {
         dispatch(setUser(null));
+        dispatch(setSongs([]));
+        dispatch(setCurrentSong(null));
         dispatch(setIsAutherised(false));
         toast.success('Logged out successfully!');
         navigate('/login');
       }
     } catch (err) {
       console.error('Logout error:', err);
+    }finally{
+      setLoading(false);
     }
   };
+
+  if(loading) {
+    return (
+      <div
+        className={`flex flex-col items-center text-blue-600 ${isDarkMode ? "bg-black" : "bg-gradient-to-tr from-white via-indigo-50 to-indigo-100"} 
+ justify-center h-screen`}
+      >
+        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin"></div>
+        <p className="mt-6 text-xl font-semibold animate-pulse tracking-wide">
+          Loading, please wait...
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div
