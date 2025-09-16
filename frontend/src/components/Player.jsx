@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaRandom, FaStepBackward, FaPause, FaPlay, FaStepForward, FaRedo } from 'react-icons/fa'
 import {
   selectCurrentSong,
@@ -10,13 +10,18 @@ import {
   toggleShow,
   selectDuration,
   seekSong,
+  selectRepeat,
+  setRepeat,
+  setCurrentIndex,
+  toggleSuffle,
+  selectSuffle,
 } from '../store/features/songSlice'
 import { useTheme } from '../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Player = () => {
-    const currentSong = useSelector(selectCurrentSong);
+  const currentSong = useSelector(selectCurrentSong);
   const isPlaying = useSelector(selectIsPlaying);
   const progress = useSelector(selectProgress);
   const duration = useSelector(selectDuration);
@@ -24,6 +29,9 @@ const Player = () => {
   const darkTheme = useTheme().isDarkMode;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const repeat = useSelector(selectRepeat);
+  const suffle = useSelector(selectSuffle);
+  
 
   const handleSeek = (e) => {
       const value = Number(e.target.value);
@@ -80,8 +88,9 @@ const Player = () => {
 
             {/* Controls */}
             <div className="flex items-center justify-center gap-6">
-              <button className="text-gray-400 hover:text-white cursor-pointer">
-                <FaRandom size={20} />
+              <button onClick={() => dispatch(toggleSuffle())} className={`${ !suffle ? "text-gray-400 hover:text-white" :
+                "text-green-600 hover:text-green-500"
+               } cursor-pointer`}>  <FaRandom size={20} />
               </button>
 
               <button
@@ -105,7 +114,9 @@ const Player = () => {
                 <FaStepForward size={22} />
               </button>
 
-              <button className="text-gray-400 hover:text-white cursor-pointer">
+              <button onClick={() => dispatch(setRepeat(!repeat))} className={`${ !repeat ? "text-gray-400 hover:text-white" :
+                "text-green-600 hover:text-green-500"
+               } cursor-pointer`}>
                 <FaRedo size={20} />
               </button>
             </div>

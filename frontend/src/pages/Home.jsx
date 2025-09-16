@@ -34,23 +34,7 @@ const Home = () => {
         navigate('/player')
     };
 
- useEffect(() => {
-        const fetchSongs = async () => {
-            try {
-                const response = await axios.get("/songs/get-songs", {
-                    withCredentials: true
-                });
-                dispatch(setSongs(response.data.songs));
-            } catch (error) {
-                if (error.response?.status === 401) {
-                    window.location.href = '/login';
-                }
-                console.error("Error fetching songs:", error);
-            }
-        };
 
-        fetchSongs();
-    }, [dispatch]);
 
     return (
             <div className={`min-h-screen bg-black flex flex-col items-center justify-between px-0 pb-24 

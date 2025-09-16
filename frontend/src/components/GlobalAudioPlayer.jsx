@@ -8,7 +8,11 @@ import {
   setDuration,
   selectSeekTo,
   clearSeek,
+  selectRepeat,
+  setRepeat,
+  selectSuffle,
 } from "../store/features/songSlice";
+import { use } from "react";
 
 const GlobalAudioPlayer = () => {
   const audioRef = useRef(null);
@@ -17,6 +21,18 @@ const GlobalAudioPlayer = () => {
   const currentSong = useSelector(selectCurrentSong);
   const isPlaying = useSelector(selectIsPlaying);
   const seekTo = useSelector(selectSeekTo);
+  const repeat = useSelector(selectRepeat);
+  const suffle = useSelector(selectSuffle);
+  const idx = useSelector(state => state.songs.currentIndex);
+
+
+  useEffect(() => {
+    localStorage.setItem('repeat', repeat);
+  }, [repeat])
+
+  useEffect(() => {
+    localStorage.setItem('suffle', suffle);
+  }, [suffle])
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -34,17 +50,28 @@ const GlobalAudioPlayer = () => {
     }
   }, [seekTo, dispatch]);
 
+  useEffect(() => {
+    localStorage.setItem("idx", idx);
+  },[currentSong])
+
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
       dispatch(setDuration(audioRef.current.duration));
+      const savedTime = localStorage.getItem("currentTime");
+      if (savedTime) {
+        audioRef.current.currentTime = Number(savedTime);
+      }
     }
   };
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
+      localStorage.setItem("currentTime", audioRef.current.currentTime);
       dispatch(setProgress(audioRef.current.currentTime));
     }
   };
+
+  
 
   return currentSong ? (
     <audio
@@ -52,7 +79,10 @@ const GlobalAudioPlayer = () => {
       src={currentSong.audio}
       onLoadedMetadata={handleLoadedMetadata}
       onTimeUpdate={handleTimeUpdate}
-      onEnded={() => dispatch(nextSong())}
+      onEnded={() => {
+        repeat ? audioRef.current.play() :
+        dispatch(nextSong())
+      }}
       style={{ display: "none" }}
     />
   ) : null;

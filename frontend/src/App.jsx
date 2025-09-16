@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsAutherised, setLoading, setUser } from './store/features/userSlice'
 import { Toaster} from 'react-hot-toast'
+import { setSongs } from './store/features/songSlice'
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
@@ -13,7 +14,7 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 function App() {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.user.loading)
-  console.log(loading);
+  // console.log(loading);
   
   
 
@@ -30,6 +31,24 @@ function App() {
       dispatch(setLoading(false))
     }
   }
+
+   useEffect(() => {
+        const fetchSongs = async () => {
+            try {
+                const response = await axios.get("/songs/get-songs", {
+                    withCredentials: true
+                });
+                dispatch(setSongs(response.data.songs));
+            } catch (error) {
+                if (error.response?.status === 401) {
+                    window.location.href = '/login';
+                }
+                console.error("Error fetching songs:", error);
+            }
+        };
+
+        fetchSongs();
+    }, [dispatch]);
 
   useEffect(() => {
     fetchUser()

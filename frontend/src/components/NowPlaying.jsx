@@ -11,6 +11,10 @@ import {
   toggleShow,
   selectDuration,
   seekSong,
+  setRepeat,
+  selectRepeat,
+  toggleSuffle,
+  selectSuffle,
 } from "../store/features/songSlice";
 
 // React Icons
@@ -27,6 +31,8 @@ const NowPlaying = () => {
   const duration = useSelector(selectDuration);
   const show = useSelector((state) => state.songs.show);
   const darkTheme = useTheme().isDarkMode;
+  const repeat = useSelector(selectRepeat)
+  const suffle = useSelector(selectSuffle)
 
   const audioRef = useRef(null);
 
@@ -61,6 +67,10 @@ const NowPlaying = () => {
             </div>
 
             <div onClick={(e) => e.stopPropagation()} className="flex items-center gap-2 ml-2">
+              <button onClick={() => dispatch(toggleSuffle())} className={`${ !suffle ? "text-gray-600 hover:text-black" :
+                              "text-green-600 hover:text-green-500"
+                             } cursor-pointer`}>  <FaRandom size={15} />
+                            </button>
               <button
                 onClick={() => dispatch(prevSong())}
                 className="cursor-pointer text-gray-700 hover:text-black"
@@ -81,6 +91,11 @@ const NowPlaying = () => {
               >
                 <FaStepForward size={20} />
               </button>
+              <button onClick={() => dispatch(setRepeat(!repeat))} className={`${ !repeat ? "text-gray-600 hover:text-black" :
+                              "text-green-600 hover:text-green-500"
+                             } cursor-pointer`}>
+                              <FaRedo size={15} />
+                            </button>
             </div>
           </div>
 
