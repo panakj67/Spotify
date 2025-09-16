@@ -6,6 +6,7 @@ import cors from 'cors';
 
 const app = express();
 
+
 // ✅ Whitelisted frontend domains
 const allowedOrigins = [
   'http://localhost:5173',
